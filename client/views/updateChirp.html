@@ -1,0 +1,33 @@
+<div id="container">
+    <div class="chirpImg">
+        <a href="#/chirps"><i class="fa fa-long-arrow-left fa-2x" aria-hidden="true"></i></a>
+        <i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i>
+        <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+        <img src="img/profile.jpg">
+    </div>
+    <div id='chirperBox'>
+        <button id='A' class="psuedo-btn">
+            <span class="fa-stack fa-xlg">
+                <i class="fa fa-users fa-stack-2x"></i>
+                <i class="fa fa-check fa-stack-1x"></i>
+            </span> 
+        </button>
+        <button id='B' class="psuedo-btn"><i class="fa fa-bell-o fa-2x" aria-hidden="true"></i></button>
+        <br>
+        <div style="clear:both"></div>
+        <h5>Sign up for Chirper Alerts!</h5>
+        <h4>@Rosslanding</h4>
+        <div class="chirpContain">
+            <textarea id='chirp' ng-model="chirp" placeholder="Type your new chirp here." maxlength="120"></textarea>
+            <div id="word-cnt"><span>0</span>/120</div>
+        </div>
+        <button type="button" ng-click="updateChirp()" id="chirp-btn" ng-disabled='empty'>Re-Chirp!<img src="img/cute-little-bird-icon-85416.png"></button>
+        <div class="clear: both;"></div>
+        <div id="followers">
+            <h3>Following: <span>4,564</span></h3>
+            <h3>Follwers: <span>5,342,902</span></h3>
+        </div>
+    </div>
+    <div id="chirpList">
+    </div>
+</div>
