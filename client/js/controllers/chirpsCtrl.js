@@ -1,44 +1,21 @@
-app.controller('chirpsCtrl',['$scope','$http', function($scope, $http){
+app.controller('chirpsCtrl',['$scope','$http','Chirp','User', function($scope, $http,Chirp,User){
     $scope.empty = true;
-    getChirps();
-
-    $http({
-        method: "GET",
-        url: '/api/users'
-    }).then(function(users){
-        $scope.users = users.data;
-    }, function(err){
-        console.log(err);
-    })
+    $scope.chirps = Chirp.query();
+    $scope.users = User.query();
     
-    function getChirps(){
-        $http({
-            method: "GET",
-            url: "/api/chirps"
-        }).then(function (success) {
-            $scope.chirps = success.data;
-        }, function (error) {
-            console.log(error);
-        })
-    }
-
     $scope.captureChirp = function(){
-        var chirp = {};
-        chirp.message = $scope.chirp;
-        chirp.user = $scope.selected.id;
-            $http({
-            method: "POST",
-            url: "/api/chirps",
-            contentType: "application/json",
-            data: chirp
-        }).then(function (success) {
-            getChirps();
+        var chirp = new Chirp({
+            message: $scope.chirp,
+            user: $scope.selected.id
+        })
+        chirp.$save(function (success) {
             $scope.selected = '';
-            $('#chirp-btn').prop('disabled', true);
+            $scope.empty = true;
             $scope.chirp = "";
+            $scope.chirps = Chirp.query();
         }, function (err) {
             console.log(err);
-        })
+        });
     }
     
     $scope.getdate = function(time) {

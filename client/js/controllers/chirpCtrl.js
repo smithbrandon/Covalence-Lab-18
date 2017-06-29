@@ -1,25 +1,9 @@
-app.controller('chirpCtrl',['$scope','$http','$routeParams',function($scope,$http,$routeParams){
+app.controller('chirpCtrl',['$scope','$http','$routeParams', 'Chirp','User',function($scope,$http,$routeParams, Chirp,User){
     $scope.empty = false;
     var id = $routeParams.id;
-    //Get all Users
-    $http({
-        method: "GET",
-        url: '/api/users'
-    }).then(function(users){
-        $scope.users = users.data;
-    }, function(err){
-        console.log(err);
-    })
-
-    //Get specified Chirp
-    $http({
-        method: "GET",
-        url: "/api/chirps/" + id
-        }).then(function(chirp){
-            $scope.chirp = chirp.data[0];
-        },function(err){
-            console.log(err);
-    })
+    $scope.users = User.query();
+    $scope.chirps = Chirp.query();
+    $scope.chirp = Chirp.get({id: id});
 
     $scope.getDate = function(time) {
         var currenttime = new Date();
@@ -39,27 +23,19 @@ app.controller('chirpCtrl',['$scope','$http','$routeParams',function($scope,$htt
     $scope.deleteChirp = function(id){
         var del = confirm('Are you Sure you want to delete this Chirp?');
             if(del){
-                $http({
-                    method: "DELETE",
-                    url:  '/api/chirps/'+ id
-                }).then(function(success){
-                    window.location.replace("#/chirps");
-                },function(err){
-                    console.log(err);
-                })
+                $scope.chirp.$delete(function(success){
+                    window.location.replace('#/chirps');
+                });
             }
         }
     
     $scope.captureChirp = function(){
-        var chirp= {};
-        chirp.message = $scope.chirpMessage;
-        chirp.user = $scope.selected.id;
-            $http({
-            method: "POST",
-            url: "/api/chirps",
-            contentType: "application/json",
-            data: chirp
-        }).then(function (success) {
+        
+        var chirp = new Chirp({
+            message: $scope.chirpMessage,
+            user:  $scope.selected.id
+        });
+        chirp.$save(function (success) {
             $('#chirp-btn').prop('disabled', true);
             $scope.chirpMessage = "";
         }, function (err) {

@@ -20,15 +20,16 @@ app.use(express.static(clientPath));
 app.use(bodyParser.json());
 
 //api routes for get and post
-app.get('/api/users',function(req, res){
+app.get('/api/users', function (req, res) {
     getUsers()
-    .then(function(users){
-        res.send(users);
-    },function(err){
-        console.log(err);
-        res.sendStatus(500);
-    })
+        .then(function (users) {
+            res.send(users);
+        }, function (err) {
+            console.log(err);
+            res.sendStatus(500);
+        })
 });
+
 app.get('/api/chirps', function (req, res) {
     getChirps()
         .then(function (chirps) {
@@ -38,6 +39,7 @@ app.get('/api/chirps', function (req, res) {
             res.sendStatus(500);
         });
 });
+
 app.route('/api/chirps/:id')
     .get(function (req, res) {
         getChirp(req.params.id)
@@ -48,26 +50,25 @@ app.route('/api/chirps/:id')
             });
     }).delete(function (req, res) {
         deleteChirp(req.params.id)
-        .then(function(chirp){
-            res.sendStatus(204);
-        },function(err){
-            res.sendStatus(500);
-        })
+            .then(function (chirp) {
+                res.sendStatus(204);
+            }, function (err) {
+                res.sendStatus(500);
+            })
     }).put(function (req, res) {
-        updateChirp(req.body.user, req.body.message)
-        .then(function(chirp){
-            res.status(204).send(chirp);
-        },function(err){
-            console.log(err);
-            res.sendStatus(500);
-        });
+        updateChirp(req.params.id, req.body.message)
+            .then(function (chirp) {
+                res.status(204).send(chirp);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     });
 
 app.post('/api/chirps/', function (req, res) {
-    console.log(req.body);
     insertChirp(req.body.user, req.body.message)
         .then(function (chirp) {
-            res.status(201).send(chirp);
+            res.status(201).send();
         }, function (err) {
             console.log(err);
             res.sendStatus(500);
@@ -98,6 +99,7 @@ function getChirps() {
         });
     });
 }
+
 function getChirp(id) {
     return new Promise(function (resolve, reject) {
         pool.getConnection(function (err, connection) {
@@ -111,24 +113,25 @@ function getChirp(id) {
                         reject(err);
                     } else {
                         connection.release();
-                        resolve(resultSets[0]);
+                        resolve(resultSets[0][0]);
                     }
                 });
             }
         });
     });
 }
+
 function insertChirp(usr, msg) {
     return new Promise(function (resolve, reject) {
         pool.getConnection(function (err, connection) {
             if (err) {
                 connection.release();
-                reject('first error: ' + err);
+                reject(err);
             } else {
                 connection.query("CALL insertChirp(?,?);", [usr, msg], function (err, resultSets) {
                     if (err) {
                         connection.release();
-                        reject('second error: ' + err);
+                        reject(err);
                     } else {
                         connection.release();
                         resolve(resultSets[0]);
@@ -138,18 +141,19 @@ function insertChirp(usr, msg) {
         })
     })
 }
+
 function updateChirp(id, msg) {
     return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err, connection){
-            if(err){
+        pool.getConnection(function (err, connection) {
+            if (err) {
                 connection.release();
                 reject(err);
-            }else{
-                connection.query("CALL updateChirp(?,?);",[id,msg],function(err, resultSets){
-                    if(err){
+            } else {
+                connection.query("CALL updateChirp(?,?);", [id, msg], function (err, resultSets) {
+                    if (err) {
                         connection.release();
                         reject(err);
-                    }else{
+                    } else {
                         connection.release();
                         resolve();
                     }
@@ -158,18 +162,19 @@ function updateChirp(id, msg) {
         })
     })
 }
+
 function deleteChirp(id) {
     return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err, connection){
-            if(err){
+        pool.getConnection(function (err, connection) {
+            if (err) {
                 connection.release();
                 reject(err);
-            }else{
-                connection.query("CALL deleteChirp(?);",[id],function(err, resultSets){
-                    if(err){
+            } else {
+                connection.query("CALL deleteChirp(?);", [id], function (err, resultSets) {
+                    if (err) {
                         connection.release();
                         reject(err);
-                    }else{
+                    } else {
                         connection.release();
                         resolve();
                     }
@@ -178,18 +183,19 @@ function deleteChirp(id) {
         })
     })
 }
-function getUsers(){
-    return new Promise(function(resolve, reject){
-        pool.getConnection(function(err, connection){
-            if(err){
+
+function getUsers() {
+    return new Promise(function (resolve, reject) {
+        pool.getConnection(function (err, connection) {
+            if (err) {
                 connection.release();
                 reject(err);
-            }else{
-                connection.query("CALL getUsers()", function(err,resultSets){
-                    if(err){
+            } else {
+                connection.query("CALL getUsers()", function (err, resultSets) {
+                    if (err) {
                         connection.release();
                         reject(err);
-                    }else{
+                    } else {
                         connection.release();
                         resolve(resultSets[0]);
                     }

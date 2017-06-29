@@ -1,4 +1,4 @@
-var app = angular.module('myApp',['ngRoute']);
+var app = angular.module('myApp',['ngRoute','ngResource']);
 
 app.config(['$routeProvider','$locationProvider',function($routeProvider,$locationProvider){
     $locationProvider.hashPrefix("");
@@ -14,5 +14,5 @@ app.config(['$routeProvider','$locationProvider',function($routeProvider,$locati
     }).when('/chirps/:id/update',{
         templateUrl: 'views/updateChirp.html',
         controller: 'updateChirpCtrl'
-    });
+    }).otherwise({redirectTo: '/'});
 }])

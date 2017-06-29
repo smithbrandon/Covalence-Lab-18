@@ -1,36 +1,18 @@
-app.controller('updateChirpCtrl',['$scope','$http','$routeParams',function($scope,$http,$routeParams){
+app.controller('updateChirpCtrl',['$scope','$http','$routeParams','Chirp',function($scope,$http,$routeParams,Chirp){
     $scope.empty = true;
 
     var id = $routeParams.id;
     $('#users').hide();
 
-    $http({
-        method: "GET",
-        url: "/api/chirps/" + id
-    }).then(function(chirp){
-            $scope.chirp = chirp.data[0].message;
-        },function(err){
-            console.log(err);
-    })
-
+    $scope.oldChirp = Chirp.get({ id : id});    
     $scope.updateChirp = function(){
-        var chirp = {};
-        chirp.message = $scope.chirp;
-        chirp.user = parseInt(id);
-        
-        $http({
-            method: 'PUT',
-            url: '/api/chirps/' + id,
-            contentType: 'application/json',
-            data: JSON.stringify(chirp)
-        }).then(function(success){
+        $scope.oldChirp.$update() 
+        .then(function(success){
             window.location.replace('#/chirps/' + id);
         },function(err){
             console.log(err);
         })
     }
-
-//Start Heree
 
 $('#chirp').keyup(function () {
     checkMsg();

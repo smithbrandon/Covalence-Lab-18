@@ -18,14 +18,14 @@
         <h5>Sign up for Chirper Alerts!</h5>
         <h4>@Rosslanding</h4>
         <div class="chirpContain">
-            <textarea id='chirp' ng-model="chirp" placeholder="Type your new chirp here." maxlength="120"></textarea>
+            <textarea id='chirp' ng-model="oldChirp.message" placeholder="Type your new chirp here." maxlength="120">{{oldChirp.message}}</textarea>
             <div id="word-cnt"><span>0</span>/120</div>
         </div>
         <button type="button" ng-click="updateChirp()" id="chirp-btn" ng-disabled='empty'>Re-Chirp!<img src="img/cute-little-bird-icon-85416.png"></button>
         <div class="clear: both;"></div>
         <div id="followers">
             <h3>Following: <span>4,564</span></h3>
-            <h3>Follwers: <span>5,342,902</span></h3>
+            <h3>Follwers: <span>53,429</span></h3>
         </div>
     </div>
     <div id="chirpList">
