@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "main": "server/index.js",
   "scripts": {
-    "test": "mocha server/serverTests"
+    "test": "mocha server/serverTests",
+    "start": "node server/index.js"
   },
   "author": "Covalence",
   "license": "MIT",

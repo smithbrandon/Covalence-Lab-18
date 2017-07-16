@@ -9,10 +9,10 @@ console.log("Starting web server at localhost:3000");
 var mysql = require('mysql');
 var pool = mysql.createPool({
     connectionLimit: 10,
-    host: 'localhost',
-    user: 'chirper-admin',
-    password: 'passwordChirper',
-    database: 'Chirper'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_SCHEMA
 });
 
 var clientPath = path.join(__dirname, '..', 'client');
@@ -75,7 +75,7 @@ app.post('/api/chirps/', function (req, res) {
         });
 });
 
-app.listen(3000);
+app.listen(process.env.PORT, process.env.IP);
 
 function getChirps() {
     return new Promise(function (resolve, reject) {
